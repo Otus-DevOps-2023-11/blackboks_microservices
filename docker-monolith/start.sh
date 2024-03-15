@@ -4,4 +4,4 @@
 
 source /reddit/db_config
 
-cd /reddit && puma || exi
+cd /reddit && puma || exit
