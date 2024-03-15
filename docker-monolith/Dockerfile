@@ -11,6 +11,6 @@ COPY start.sh /start.sh
 
 RUN cd /reddit && rm Gemfile.lock && bundle install
 RUN chmod 0777 /start.sh
-EXPOSE 9292
+
 
 CMD ["/start.sh"]
