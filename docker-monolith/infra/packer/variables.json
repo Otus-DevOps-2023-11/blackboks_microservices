@@ -1,0 +1,14 @@
+{
+  "service_account_key_file": "/home/bbks/otus/blackboks_microservices/docker-monolith/infra/packer/key.json",
+  "folder_id": "b1gkdafp07horpeotfcf",
+  "source_image_family": "ubuntu-1804-lts",
+  "image_family": "reddit-docker",
+  "image_name": "reddit-docker-{{timestamp}}",
+  "use_ipv4_nat": "true",
+  "instance_cores": "2",
+  "instance_mem_gb": "2",
+  "disk_size_gb": "10",
+  "instance_name": "packer-test",
+  "zone": "ru-central1-a",
+  "subnet_id": "e9bccatc2a60elhte5ie"
+}
