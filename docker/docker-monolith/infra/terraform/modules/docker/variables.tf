@@ -18,4 +18,3 @@ variable "vm_count" {
   description = "Count of running instances"
   default     = 2
 }
-
