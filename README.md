@@ -51,3 +51,7 @@
 * Добавлен файл .gitlab-ci.yml
 * Добавлен внешний раннер
 * Добавлены файлы проекта reddit, тесты в пайплайне и динамические окружения
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/d763e839-8917-40c8-89f5-5e4914f8fd62)
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/a25ac224-3c3c-4d0b-9c9e-2d3ecf8d7389)
