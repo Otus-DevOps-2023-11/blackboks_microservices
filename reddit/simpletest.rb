@@ -1,4 +1,3 @@
-simpletest.rb
 require_relative './app'
 require 'test/unit'
 require 'rack/test'
