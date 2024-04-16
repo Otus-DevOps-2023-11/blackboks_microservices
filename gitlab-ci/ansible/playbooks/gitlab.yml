@@ -1,0 +1,5 @@
+- name: Install gitlab in docker
+  hosts: gitlab
+  become: true
+  roles:
+  - gitlab

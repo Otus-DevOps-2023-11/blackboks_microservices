@@ -1,0 +1,8 @@
+[app]
+appserver ansible_host=158.160.59.212
+
+[db]
+dbserver ansible_host=158.160.38.250
+
+[gitlab]
+gitlabserver ansible_host=178.154.221.246
