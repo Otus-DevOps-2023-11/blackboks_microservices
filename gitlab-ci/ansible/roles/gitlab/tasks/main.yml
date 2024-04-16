@@ -1,0 +1,29 @@
+---
+- name: Create directory for gitlab
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: '0755'
+  with_items:
+    - '/srv/gitlab'
+    - '/srv/gitlab/config'
+    - '/srv/gitlab/data'
+    - '/srv/gitlab/logs'
+
+- name: Copy Docker Compose files
+  copy:
+    src: files/docker-compose.yml
+    dest: /srv/gitlab/docker-compose.yml
+
+# - name: Run gitlab
+#   community.docker.docker_compose_v2:
+#     project_src: /srv/gitlab/
+#     build: no
+#     state: present
+#   tags: up
+
+- name: Run gutlab v2
+  command: "{{ item }}"
+  with_items:
+    - 'docker compose -f /srv/gitlab/docker-compose.yml up -d'
+  tags: up
