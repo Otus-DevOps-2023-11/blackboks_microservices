@@ -77,4 +77,9 @@ https://hub.docker.com/r/bbks/ui
 https://hub.docker.com/r/bbks/comment
 https://hub.docker.com/r/bbks/prometheus
 * Задание со :star: #1 - В docker-compose.yml и в prometheus.yml добавлен porcona/mongodb_exporter:0.40, пересобран образ prometheus
-* Задание со :star: #2 -  docker-compose.yml и в prometheus.yml добавлен blackbox-exporter, пересобран образ prometheus, допонительно создан Dockerfile для blackbox-exporter, собран образ https://hub.docker.com/r/bbks/blackbox-exporter. Использованы модули http_2xx и icmp_ttl5 для тестирования экспортера
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/394f50de-3c14-483e-9816-c245e8408862)
+
+* Задание со :star: #2 - В docker-compose.yml и в prometheus.yml добавлен blackbox-exporter, пересобран образ prometheus, допонительно создан Dockerfile для blackbox-exporter, собран образ https://hub.docker.com/r/bbks/blackbox-exporter. Использованы модули http_2xx и icmp_ttl5 для тестирования экспортера
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/3f518a67-84af-4ba3-b8ce-a968580c7c3a)
