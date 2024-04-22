@@ -55,3 +55,33 @@
 ![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/d763e839-8917-40c8-89f5-5e4914f8fd62)
 
 ![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/a25ac224-3c3c-4d0b-9c9e-2d3ecf8d7389)
+
+
+## ДЗ 17 - Системы мониторинга
+
+### Было сделано:
+
+* В YC с помощью  terraform (добавлен модуль для prometheus) создана ВМ из образа диска для gitlab из предыдущего задания
+* Создана ansible роль для развертывания prometheus в docker контейнере, сам docker так же установлен через ansible роль geerlingguy.docker
+* Протестирован веб интерфейс prometheus, развернутого на ВМ в YC
+* В локальном репозитории создан Dockerfile для prometheus и файл конфигурации prometheus.yml в каталоге monitoring/prometheus
+* Собран образ bbks/prometheus:latest
+* Пересобраны образы каждого из сервисов с использованием скриптов docker_build.sh
+* Сервис prometheus добавлен в основной docker-compose.yml файл
+* Протестированы таргеты, метрики для сервисов
+* Добавлен экспортер node-exporter в основной docker-compose.yml, отредактирован prometheus.yml, пересобран образ prometheus
+* Пересозданы сервисы, протестированы эндпоинты и метрики
+* Созданные образы отправлены в dockerhub:
+ - https://hub.docker.com/r/bbks/post
+ - https://hub.docker.com/r/bbks/ui
+ - https://hub.docker.com/r/bbks/comment
+ - https://hub.docker.com/r/bbks/prometheus
+* Задание со :star: #1 - В docker-compose.yml и в prometheus.yml добавлен porcona/mongodb_exporter:0.40, пересобран образ prometheus
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/394f50de-3c14-483e-9816-c245e8408862)
+
+* Задание со :star: #2 - В docker-compose.yml и в prometheus.yml добавлен blackbox-exporter, пересобран образ prometheus, допонительно создан Dockerfile для blackbox-exporter, собран образ https://hub.docker.com/r/bbks/blackbox-exporter. Использованы модули http_2xx и icmp_ttl5 для тестирования экспортера
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/3f518a67-84af-4ba3-b8ce-a968580c7c3a)
+
+![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/981ae9e5-cba9-474e-9332-e771ba5872f3)
