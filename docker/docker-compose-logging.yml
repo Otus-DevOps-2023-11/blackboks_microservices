@@ -1,0 +1,40 @@
+version: '3'
+services:
+
+  fluentd:
+    image: ${USERNAME}/fluentd
+    ports:
+      - "24224:24224"
+      - "24224:24224/udp"
+
+  elasticsearch:
+    image: elasticsearch:8.13.0
+    environment:
+      - ELASTIC_CLUSTER=false
+      - CLUSTER_NODE_MASTER=true
+      - CLUSTER_MASTER_NODE_NAME=es01
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - xpack.security.enrollment.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx2048m
+    expose:
+      - 9200
+    ports:
+      - "9200:9200"
+
+  kibana:
+    image: kibana:8.13.0
+    ports:
+      - "5601:5601"
+
+  zipkin:
+    image: openzipkin/zipkin:2.21.0
+    ports:
+      - "9411:9411"
+    networks:
+      - front_net
+      - back_net
+
+networks:
+  front_net:
+  back_net:
