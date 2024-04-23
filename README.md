@@ -85,3 +85,15 @@
 ![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/3f518a67-84af-4ba3-b8ce-a968580c7c3a)
 
 ![image](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/981ae9e5-cba9-474e-9332-e771ba5872f3)
+
+
+
+## ДЗ 18 - Системы логирования
+
+### Было сделано:
+
+* Пересобраны контейнеры с тэгом logging
+* Запущен EFK стэк для работы с логами
+* Протестирован fluentd с фильтрами regexp и grok
+* Протестирована визуализация логов в kibana
+* Протестирован сервис распределенного трейсинга Zipkin

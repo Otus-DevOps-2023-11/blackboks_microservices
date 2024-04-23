@@ -77,7 +77,7 @@ DEPENDENCIES
   haml
   prometheus-client
   puma
-  rack (>= 2.0.6)
+  rack
   rufus-scheduler
   sinatra (~> 2.0.2)
   sinatra-contrib
