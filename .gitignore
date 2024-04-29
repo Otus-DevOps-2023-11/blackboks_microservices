@@ -17,3 +17,5 @@ vault.key
 run.sh
 /src/.env
 /docker/.env
+/kubernetes/terraform/.idea/
+/kubernetes/packer/variables22.json

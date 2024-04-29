@@ -1,0 +1,6 @@
+- name: Install cluster
+  hosts: all
+#  connection: local
+  become: true
+  roles:
+    - kubernetes
