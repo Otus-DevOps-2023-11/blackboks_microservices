@@ -1,4 +1,7 @@
 packer/variables.json
+packer/key.json
+kubernetes/terraform/bucket-keys
+kubernetes/terraform/key.json
 *.tfstate
 *.tfstate.*.backup
 *.tfstate.backup
