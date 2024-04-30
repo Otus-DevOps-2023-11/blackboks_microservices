@@ -1,0 +1,80 @@
+---
+- name: Set a hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+
+- name: Install utils
+  apt:
+    name:
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+      - python3-pip
+    state: present
+    update_cache: true
+
+- name: Install pip3 modules for k8s
+  pip:
+    name:
+      - openshift
+      - pyyaml
+      - kubernetes
+  tags: pip
+
+- name: Add repo key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add repo
+  apt_repository:
+    repo: "deb https://download.docker.com/linux/ubuntu jammy stable"
+    update_cache: true
+
+- name: Install containerd
+  apt:
+    name: containerd
+    state: latest
+  tags: cri
+
+- name: Check containerd directory
+  stat:
+    path: '/etc/containerd'
+  register: cnt_dir
+
+- name: Create directory for containerd
+  file:
+    path: '/etc/containerd'
+    state: directory
+  when: not cnt_dir.stat.exists
+
+- name: Generate containerd config
+  shell:
+    cmd: containerd config default > /etc/containerd/config.toml
+
+- name: Enable cgroups
+  lineinfile:
+    path: /etc/containerd/config.toml
+    search_string: "{{item.before}}"
+    line: "{{item.after}}"
+    state: present
+  with_items:
+    - { before: '            SystemdCgroup = false', after: '            SystemdCgroup = true' }
+  notify: restart_containerd
+  tags: conf2
+
+- name: Enable containerd
+  systemd_service:
+    name: containerd
+    enabled: true
+
+- name: Set ip_forward
+  lineinfile:
+    path: /proc/sys/net/ipv4/ip_forward
+    search_string: "{{item.before}}"
+    line: "{{item.after}}"
+    state: present
+    unsafe_writes: true
+  with_items:
+    - { before: '0', after: '1' }

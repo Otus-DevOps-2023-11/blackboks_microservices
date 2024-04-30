@@ -1,4 +1,8 @@
 packer/variables.json
+packer/key.json
+kubernetes/packer/key.json
+kubernetes/terraform/bucket-keys
+kubernetes/terraform/key.json
 *.tfstate
 *.tfstate.*.backup
 *.tfstate.backup
@@ -17,3 +21,5 @@ vault.key
 run.sh
 /src/.env
 /docker/.env
+/kubernetes/terraform/.idea/
+/kubernetes/packer/variables22.json

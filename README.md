@@ -97,3 +97,17 @@
 * Протестирован fluentd с фильтрами regexp и grok
 * Протестирована визуализация логов в kibana
 * Протестирован сервис распределенного трейсинга Zipkin
+
+
+## ДЗ 19 - Знакомство с Kubernetes
+
+### Было сделано:
+
+* Созданы манифесты для компонентов приложения в kubernetes/reddit
+* Вручную установлены компоненты кластера - containerd, kubelet, kubeadm, kubectl
+* Инициализирован кластер kubernetes версии 1.28.9
+* Установлен CNI Calico  с pod cidr 10.244.0.0/16
+* Задание со :star: - Кластер kubernetes версии 1.28.9 создан с помощью packer, terraform, ansible. В packer создан образ на основе Ubuntu 22.04, в terraform созданы модули master и node, в которых описаны настройки ВМ, развернуты 3 ВМ, 1 мастер, 2 воркера. В ansible созданый роли containerd и k8scluster. Containerd подготавливает ВМ для установки CR, устанавливает containderd, настраивает конфигурацию. K8scluster добавляет новые репозитории, устанавливает основные компоненты кластера, добавляет ноды в кластер.
+
+* ![image](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/17c286f8-9685-4756-90c3-18df6d2f00de)
+* ![image](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/c5afeefb-d89c-4abe-984c-391c3cb0cdfc)

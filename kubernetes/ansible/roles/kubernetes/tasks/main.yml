@@ -1,0 +1,116 @@
+---
+- name: Add repo key
+  shell: curl -fsSL "{{ item.url }}" | gpg --dearmor -o "{{ item.key }}"
+  args:
+    creates: "{{ item.key }}"
+  with_items:
+    - { url: 'https://pkgs.k8s.io/core:/stable:/v1.28/deb/Release.key', key: '/etc/apt/keyrings/kubernetes-apt-keyring.gpg' }
+  tags: repo
+
+- name: Add repo
+  apt_repository:
+    repo: "deb [signed-by={{ item.key }}] {{ item.repository }} /"
+    update_cache: false
+  with_items:
+    - { key: '/etc/apt/keyrings/kubernetes-apt-keyring.gpg', repository: https://pkgs.k8s.io/core:/stable:/v1.28/deb/  }
+
+- name: Install binaries
+  apt:
+    name:
+      - kubeadm
+      - kubelet
+      - kubectl
+    state: present
+    update_cache: true
+  tags: bin
+
+- name: Additional settings
+  shell:
+    cmd: modprobe br_netfilter; echo 1 > /proc/sys/net/bridge/bridge-nf-call-iptables
+
+- name: Crictl Settings
+  blockinfile:
+    create: true
+    path: /etc/crictl.yaml
+    block: |
+      runtime-endpoint: unix:///run/containerd/containerd.sock
+      image-endpoint: unix:///run/containerd/containerd.sock
+      timeout: 2
+
+- name: Enable kubelet
+  systemd_service:
+    name: kubelet
+    enabled: true
+
+- name: Run cluster
+  shell: kubeadm init --apiserver-cert-extra-sans=158.160.63.215 --apiserver-advertise-address=0.0.0.0 --control-plane-endpoint=158.160.63.215 --pod-network-cidr=10.244.0.0/16 --node-name=master --cri-socket=unix:///var/run/containerd/containerd.sock --kubernetes-version=1.28.9
+  when: inventory_hostname in groups['master']
+  register: results
+  tags: k8s
+
+- name: Get output from kubeadm
+  debug:
+    var: results.stdout
+  tags: k8s
+
+- name: Install pip3 modules for k8s
+  pip:
+    name:
+      - openshift
+      - pyyaml
+      - kubernetes
+  tags: pip
+
+- name: Kubeconfig for root user on master node
+  shell: "{{ item }}"
+  when: inventory_hostname in groups['master']
+  with_items:
+    - mkdir -p $HOME/.kube
+    - sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    - sudo chown $(id -u):$(id -g) $HOME/.kube/config
+  tags: kc1
+
+- name: Generate join command
+  command: kubeadm token create --print-join-command
+  register: join
+  when: inventory_hostname in groups['master']
+  tags: join
+
+- name: Copy join command to local file
+  local_action: copy content="{{ join.stdout_lines[0] }}" dest="./join-command.sh"
+  when: inventory_hostname in groups['master']
+  tags: join
+
+- name: Copy cni manifests
+  copy:
+    src: ../../reddit/cni
+    dest: /etc/kubernetes/manifests
+  when: inventory_hostname == "master-1"
+  tags: cni
+
+- name: Install cni
+  shell:
+    cmd: kubectl create -f /etc/kubernetes/manifests/cni/tigera-operator.yaml && kubectl create -f /etc/kubernetes/manifests/cni/custom-resources.yaml
+  when: inventory_hostname == "master-1"
+  tags: cni2
+
+- name: Restart kubelet
+  systemd_service:
+    name: kubelet
+    state: restarted
+
+- name: Join nodes
+  script:
+    cmd: ./join-command.sh
+  when: inventory_hostname in groups['node']
+
+- name: Install app
+  k8s:
+    state: present
+    definition:
+      - "{{ lookup('file', '/home/bbks/otus/blackboks_microservices/kubernetes/reddit/ns.yml') | from_yaml }}"
+      - "{{ lookup('file', '/home/bbks/otus/blackboks_microservices/kubernetes/reddit/mongo-deployment.yml') | from_yaml }}"
+      - "{{ lookup('file', '/home/bbks/otus/blackboks_microservices/kubernetes/reddit/comment-deployment.yml') | from_yaml }}"
+      - "{{ lookup('file', '/home/bbks/otus/blackboks_microservices/kubernetes/reddit/post-deployment.yml') | from_yaml }}"
+      - "{{ lookup('file', '/home/bbks/otus/blackboks_microservices/kubernetes/reddit/ui-deployment.yml') | from_yaml }}"
+  when: inventory_hostname == "master-1"

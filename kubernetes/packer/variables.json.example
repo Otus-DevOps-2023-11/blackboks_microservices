@@ -1,0 +1,14 @@
+{
+  "service_account_key_file": "/home/bbks/otus/blackboks_infra/packer/key.json",
+  "folder_id": "b1gkdafp07horpeotfcf",
+  "source_image_family": "ubuntu-2204-lts",
+  "image_family": "kubernetes",
+  "image_name": "kubernetes-{{timestamp}}",
+  "use_ipv4_nat": "true",
+  "instance_cores": "4",
+  "instance_mem_gb": "4",
+  "disk_size_gb": "40",
+  "instance_name": "packer-test",
+  "zone": "ru-central1-a",
+  "subnet_id": "e9bccatc2a60elhte5ie"
+}

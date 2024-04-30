@@ -1,0 +1,6 @@
+---
+- name: restart_containerd
+  systemd_service:
+    name: containerd
+    enabled: true
+    state: restarted

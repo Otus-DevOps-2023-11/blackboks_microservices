@@ -1,0 +1,9 @@
+master:
+  hosts:
+    master-servers:
+      master-1 ansible_host=158.160.63.215
+node:
+  hosts:
+    node-servers:
+      node-1 ansible_host=51.250.71.41
+      node-2 ansible_host=158.160.43.81
