@@ -64,16 +64,3 @@ resource "yandex_compute_instance" "master" {
   }
 
 }
-
-
-
-# resource "ansible_host" "master" {
-#   for_each = toset(["master-1"])
-#   name     = yandex_compute_instance.master[each.key].network_interface[0].nat_ip_address
-#   groups   = ["master"]
-#     variables = {
-#       ansible_user                 =  "ubuntu"
-#       ansible_ssh_private_key_file =  file(var.private_key_path)
-
-#     }
-# }
