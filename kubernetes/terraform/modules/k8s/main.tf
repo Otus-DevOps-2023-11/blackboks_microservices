@@ -191,7 +191,7 @@ resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
   }
 
    provisioner "local-exec" {
-     command = "kubectl create -f ../reddit/ingress-controller/deploy.yml; kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/pv.yml;  kubectl apply -f ../reddit/pvc.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
+     command = "kubectl create -f ../reddit/ingress-controller/deploy.yml; kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/mongo-volume.yml;  kubectl apply -f ../reddit/mongo-claim.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
    }
 
   provisioner "local-exec" {
@@ -199,10 +199,3 @@ resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
   }
 
 }
-
-
-#resource "null_resource" "rerun2" {
-#  provisioner "local-exec" {
-#    command = "kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
-#  }
-#}
