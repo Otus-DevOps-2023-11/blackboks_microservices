@@ -111,3 +111,22 @@
 
 * ![image](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/17c286f8-9685-4756-90c3-18df6d2f00de)
 * ![image](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/c5afeefb-d89c-4abe-984c-391c3cb0cdfc)
+
+
+## ДЗ 20 - Kubernetes. Запуск кластера и приложения.
+
+### Было сделано:
+
+* Установлен minikube
+* В minikube запущены компоненты проложения
+* Добавлены сервисы для компонентов приложения
+* Добавлены переменные окружения для comment и post подов
+* Создана служба с типом NodePort для ui компонента
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/720e42fc-bea4-4eab-bebe-64b9ac472784)
+* Создан namespace dev
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/cc60c949-da01-44d2-88d6-44b8f88852e9)
+* Вручную развернут кластер в YC, произведен деплой приложения
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/8c36fbfc-a5fb-493d-bb75-981f02cbe877)
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/e4a41be2-8ec5-48f6-b89e-bebf1912cbf0)
+* Задание со :star: - создан модуль k8s для terrafom, позволяющий развернуть кластер в автоматическом режиме, добавлен манифест для дашборда с доступом по NodePort
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/30a88bf3-7014-4157-8968-0aeec911d316)
