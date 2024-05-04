@@ -140,7 +140,7 @@ resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
     }
 
     resources {
-      memory = 4
+      memory = 2
       cores  = 2
     }
 
@@ -180,4 +180,29 @@ resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
       duration   = "3h"
     }
   }
+
+
+  provisioner "local-exec" {
+    command = "sleep 60"
+    }
+
+  provisioner "local-exec" {
+    command = "yc managed-kubernetes cluster get-credentials reddit --external --force"
+  }
+
+   provisioner "local-exec" {
+     command = "kubectl create -f ../reddit/ingress-controller/deploy.yml; kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/pv.yml;  kubectl apply -f ../reddit/pvc.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
+   }
+
+  provisioner "local-exec" {
+    command = "rm token.txt; kubectl describe secret dashboard-admin-user-token -n kubernetes-dashboard | grep token >> token.txt"
+  }
+
 }
+
+
+#resource "null_resource" "rerun2" {
+#  provisioner "local-exec" {
+#    command = "kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
+#  }
+#}

@@ -130,3 +130,20 @@
   ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/e4a41be2-8ec5-48f6-b89e-bebf1912cbf0)
 * Задание со :star: - создан модуль k8s для terrafom, позволяющий развернуть кластер в автоматическом режиме, добавлен манифест для дашборда с доступом по NodePort
   ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/30a88bf3-7014-4157-8968-0aeec911d316)
+
+
+## ДЗ 21 - Kubernetes. Сетевые настройки, ingresss, storages.
+
+### Было сделано:
+
+* Протестированы сервисы NodePort, LoadBalancer
+* Установлен Ingress-controller nginx
+* Создан ingress манифест для ui сервиса
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/afbc6e37-a8fa-4f8f-9a5e-d6accebe6f69)
+* Создан самоподписанный сертификат, добавлен с ingress
+  ![Снимок экрана от](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/3639c141-0ef1-40a2-83c9-a8a934c3f437)
+* Задание со :star: - сертификат добавлен в виде манифеста cert.yml
+* Настроены network policy для компонентов comment и post
+* Создан отдельный диск в YC, добавлены манифести для PersistentVolume и PersistentVolumeClaim с использованием нового диска в YC
+* В деплоймент mongodb добавлен persistentVolumeClaim
+  ![Снимок экрана от 2024-05-04 14-15-10](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/09291f36-5239-4823-9667-08c54eebd292)
