@@ -1,0 +1,22 @@
+---
+service:
+  internalPort: 9292
+  externalPort: 9292
+
+image:
+  repository: bbks/ui
+  tag: logging
+
+ingress:
+  classname: nginx
+  host: "ui-dev"
+  tls:
+    host: "ui-dev"
+    secretName: "ui-ingress"
+  path: "/"
+  pathType: Prefix
+
+#postHost:
+#postPort:
+#commentHost:
+#commentPort:

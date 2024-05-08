@@ -1,0 +1,7 @@
+name: mongodb
+version: 1.0.0
+description: OTUS reddit application MONGODB
+maintainers:
+ - name: bbks
+   email: blackboks@yandex.ru
+appVersion: 7.0.0
