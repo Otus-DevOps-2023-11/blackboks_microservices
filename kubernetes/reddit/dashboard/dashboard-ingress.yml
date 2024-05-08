@@ -1,0 +1,21 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: dashboard
+  namespace: kubernetes-dashboard
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: "reddit-dashboard"
+    http:
+      paths:
+        - pathType: Prefix
+          path: /
+          backend:
+            service:
+              name: kubernetes-dashboard
+              port:
+                number: 443
