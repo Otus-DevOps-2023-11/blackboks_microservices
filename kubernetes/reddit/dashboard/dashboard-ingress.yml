@@ -6,10 +6,15 @@ metadata:
   namespace: kubernetes-dashboard
   annotations:
     nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+#    cert-manager.io/cluster-issuer: letsencrypt-staging
 spec:
+  tls:
+  - hosts:
+    - "k8s.blackboks.ru"
+    secretName: "tls-secret"
   ingressClassName: nginx
   rules:
-  - host: "reddit-dashboard"
+  - host: "k8s.blackboks.ru"
     http:
       paths:
         - pathType: Prefix

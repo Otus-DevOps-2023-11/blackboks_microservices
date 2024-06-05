@@ -23,6 +23,7 @@ resource "yandex_vpc_subnet" "reddit-cluster-subnet" {
   v4_cidr_blocks = var.subnet_cidr
 }
 
+
 resource "yandex_iam_service_account" "k8s-master" {
   name = "k8s-master"
 }
@@ -78,7 +79,7 @@ resource "yandex_logging_group" "reddit-logs" {
 
 resource "null_resource" "sleep" {
   provisioner "local-exec" {
-    command = "sleep 60"
+    command = "sleep 90"
   }
 }
 
@@ -120,8 +121,9 @@ resource "yandex_kubernetes_cluster" "reddit-cluster" {
 
 
 resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
+  for_each    = toset(["node-1", "node-2"])
   cluster_id  = yandex_kubernetes_cluster.reddit-cluster.id
-  name        = "reddit-worker-node"
+  name        = each.key
   description = "Cluster nodes"
   version     = "1.29"
 
@@ -140,8 +142,9 @@ resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
     }
 
     resources {
-      memory = 2
-      cores  = 2
+      memory = 4
+      cores  = 4
+      core_fraction = 50
     }
 
     boot_disk {
@@ -191,7 +194,8 @@ resource "yandex_kubernetes_node_group" "reddit-worker-nodes" {
   }
 
    provisioner "local-exec" {
-     command = "kubectl create -f ../reddit/ingress-controller/deploy.yml; kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/mongo-volume.yml;  kubectl apply -f ../reddit/mongo-claim.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
+     command = "kubectl create -f ../reddit/ingress-controller/deploy.yaml; kubectl apply -f ../reddit/dashboard/; kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.14.5/cert-manager.crds.yaml"
+     #kubectl apply -f ../reddit/dev-namespace.yml; kubectl apply -f ../reddit/mongo-volume.yml;  kubectl apply -f ../reddit/mongo-claim.yml; kubectl apply -f ../reddit/ -n dev; kubectl apply -f ../reddit/dashboard/dashboard.yml"
    }
 
   provisioner "local-exec" {

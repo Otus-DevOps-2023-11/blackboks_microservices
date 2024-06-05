@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}-config-storage
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  # annotations:
+  # {{- if .Values.gitlabConfigStorageClass }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ .Values.gitlabConfigStorageClass | quote }}
+  # {{- else if (eq .Values.provider "gke") }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ template "fullname" . }}-fast
+  # {{- else }}
+  #   volume.alpha.kubernetes.io/storageClassName: default
+  # {{- end }}
+spec:
+  storageClassName: nfs
+  accessModes:
+    - {{ default "ReadWriteOnce" .Values.gitlabConfigAccessMode | quote }}
+  resources:
+    requests:
+      storage: {{ default "1Gi" .Values.gitlabConfigStorageSize }}
