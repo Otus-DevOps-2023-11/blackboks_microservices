@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM mirror.gcr.io/alpine:3.14
 RUN apk update \
  && apk --no-cache add ruby-full ruby-dev build-base \
  && gem install bundler -N  -v '1.17.2'

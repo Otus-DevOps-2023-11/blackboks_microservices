@@ -1,0 +1,91 @@
+image:
+  name: alpine:latest
+
+stages:
+  - test
+  - staging
+  - production
+
+test:
+  stage: test
+  script:
+    - exit 0
+  only:
+    - triggers
+    - branches
+
+staging:
+  stage: staging
+  before_script:
+    - apk update
+    - apk add openssl curl tar gzip bash ca-certificates git
+    - wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    - wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk
+    - apk add glibc-2.35-r1.apk
+    - rm glibc-2.35-r1.apk
+    - curl https://storage.googleapis.com/pub/gsutil.tar.gz | tar -xz -C $HOME
+    - export PATH=${PATH}:$HOME/gsutil
+    - curl https://get.helm.sh/helm-v3.15.0-linux-amd64.tar.gz | tar zx
+    - mv linux-amd64/helm /usr/bin/
+    - helm version --client
+    - curl  -o /usr/bin/sync-repo.sh https://raw.githubusercontent.com/kubernetes/helm/master/scripts/sync-repo.sh
+    - chmod a+x /usr/bin/sync-repo.sh
+    - curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x /usr/bin/kubectl
+    - kubectl version --client
+    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
+  script:
+    - echo $KUBE_NAMESPACE
+    - export track="${1-stable}"
+    - export name="$CI_ENVIRONMENT_SLUG"
+    - echo $name
+    - helm upgrade --install --debug --wait --set ui.ingress.host="$host" --set ui.image.tag="$(curl -k https://gitlab.blackboks.ru/$CI_PROJECT_NAMESPACE/ui/raw/master/VERSION)" --set post.image.tag="$(curl -k https://gitlab.blackboks.ru/$CI_PROJECT_NAMESPACE/post/raw/master/VERSION)" --set comment.image.tag="$(curl -k https://gitlab.blackboks.ru/$CI_PROJECT_NAMESPACE/comment/raw/master/VERSION)"  --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$name" reddit
+  variables:
+    CI_APPLICATION_REPOSITORY: $CI_REGISTRY/$CI_PROJECT_PATH
+    CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
+    CI_CONTAINER_NAME: ci_job_build_${CI_JOB_ID}
+    KUBE_NAMESPACE: staging
+  environment:
+    name: staging
+    url: http://staging
+  only:
+    - master
+
+
+production:
+  stage: production
+  before_script:
+    - apk update
+    - apk add openssl curl tar gzip bash ca-certificates git
+    - wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub
+    - wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk
+    - apk add glibc-2.35-r1.apk
+    - rm glibc-2.35-r1.apk
+    - curl https://storage.googleapis.com/pub/gsutil.tar.gz | tar -xz -C $HOME
+    - export PATH=${PATH}:$HOME/gsutil
+    - curl https://get.helm.sh/helm-v3.15.0-linux-amd64.tar.gz | tar zx
+    - mv linux-amd64/helm /usr/bin/
+    - helm version --client
+    - curl  -o /usr/bin/sync-repo.sh https://raw.githubusercontent.com/kubernetes/helm/master/scripts/sync-repo.sh
+    - chmod a+x /usr/bin/sync-repo.sh
+    - curl -L -o /usr/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+    - chmod +x /usr/bin/kubectl
+    - kubectl version --client
+    - kubectl describe namespace "$KUBE_NAMESPACE" || kubectl create namespace "$KUBE_NAMESPACE"
+  script:
+    - echo $KUBE_NAMESPACE
+    - export track="${1-stable}"
+    - export name="$CI_ENVIRONMENT_SLUG"
+    - echo $name
+    - helm upgrade --install --debug --wait --set ui.ingress.host="$host" --set ui.image.tag="$(curl -k https://gitlab.blackboks.ru/$CI_PROJECT_NAMESPACE/ui/raw/master/VERSION)" --set post.image.tag="$(curl -k https://gitlab.blackboks.ru/$CI_PROJECT_NAMESPACE/post/raw/master/VERSION)" --set comment.image.tag="$(curl -k https://gitlab.blackboks.ru/$CI_PROJECT_NAMESPACE/comment/raw/master/VERSION)"  --namespace="$KUBE_NAMESPACE" --version="$CI_PIPELINE_ID-$CI_JOB_ID" "$name" reddit
+  variables:
+    CI_APPLICATION_REPOSITORY: $CI_REGISTRY/$CI_PROJECT_PATH
+    CI_APPLICATION_TAG: $CI_COMMIT_REF_SLUG
+    CI_CONTAINER_NAME: ci_job_build_${CI_JOB_ID}
+    KUBE_NAMESPACE: production
+  environment:
+    name: production
+    url: http://production
+  when: manual
+  only:
+      - master

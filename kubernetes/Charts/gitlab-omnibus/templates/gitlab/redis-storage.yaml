@@ -1,0 +1,26 @@
+{{- if .Values.redisDedicatedStorage }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "redis.fullname" . }}-storage
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  # annotations:
+  # {{- if .Values.redisStorageClass }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ .Values.redisStorageClass | quote }}
+  # {{- else if (eq .Values.provider "gke") }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ template "fullname" . }}-fast
+  # {{- else }}
+  #   volume.alpha.kubernetes.io/storageClassName: default
+  # {{- end }}
+spec:
+  storageClassName: nfs
+  accessModes:
+    - {{ default "ReadWriteOnce" .Values.redisAccessMode | quote }}
+  resources:
+    requests:
+      storage: {{ default "5Gi" .Values.redisStorageSize }}
+{{- end }}

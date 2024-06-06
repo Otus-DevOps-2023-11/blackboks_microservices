@@ -1,0 +1,21 @@
+---
+service:
+  internalPort: 27017
+  externalPort: 27017
+
+image:
+  repository: docker.io/mongo
+  tag: 7.0.0
+
+storage:
+  name: mongodb-pv
+  classname: "yc-network-hdd"
+  capacity: 1G
+  driver: disk-csi-driver.mks.ycloud.io
+  id: fhmh9t58t3npa2neef21
+
+claim:
+  name: mongodb-pvc
+  volumename: mongodb-pv
+  classname: "yc-network-hdd"
+  capacity: 1G

@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}-storage
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  # annotations:
+  # {{- if .Values.gitlabDataStorageClass }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ .Values.gitlabDataStorageClass | quote }}
+  # {{- else if (eq .Values.provider "gke") }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ template "fullname" . }}-fast
+  # {{- else }}
+  #   volume.alpha.kubernetes.io/storageClassName: default
+  # {{- end }}
+spec:
+  storageClassName: nfs
+  accessModes:
+    - {{ default "ReadWriteOnce" .Values.gitlabDataAccessMode | quote }}
+  resources:
+    requests:
+      # Fallback to supporting older value: gitlabRailsStorageSize when the new one is not set
+      storage: {{ coalesce .Values.gitlabDataStorageSize .Values.gitlabRailsStorageSize "30Gi" }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ template "fullname" . }}-registry-storage
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+  # {{- if .Values.gitlabRegistryStorageClass }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ .Values.gitlabRegistryStorageClass | quote }}
+  # {{- else if (eq .Values.provider "no-provisioner") }}
+  #   volume.beta.kubernetes.io/storageClassName: {{ template "fullname" . }}-fast
+  # {{- else }}
+  #   volume.alpha.kubernetes.io/storageClassName: default
+  # {{- end }}
+spec:
+  storageClassName: nfs
+  accessModes:
+    - {{ default "ReadWriteOnce" .Values.gitlabRegistryAccessMode | quote }}
+  resources:
+    requests:
+      storage: {{ default "30Gi" .Values.gitlabRegistryStorageSize }}

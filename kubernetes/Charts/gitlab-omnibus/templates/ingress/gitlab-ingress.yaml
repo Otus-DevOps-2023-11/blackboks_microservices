@@ -1,0 +1,65 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ template "fullname" . }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+    #cert-manager.io/cluster-issuer: letsencrypt-staging
+    #kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/backend-protocol: HTTP
+spec:
+  ingressClassName: nginx
+
+
+  tls:
+    - hosts:
+        - gitlab.{{ .Values.baseDomain }}
+  #       - registry.{{ .Values.baseDomain }}
+  #       - mattermost.{{ .Values.baseDomain }}
+  #       - prometheus.{{ .Values.baseDomain }}
+      secretName: tls-secret
+  rules:
+    - host: gitlab.blackboks.ru
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ template "fullname" . }}
+                port:
+                  number: 8005
+    # - host: registry.{{ .Values.baseDomain }}
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: {{ template "fullname" . }}
+    #             port:
+    #               number: 8105
+    # - host: mattermost.{{ .Values.baseDomain }}
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: {{ template "fullname" . }}
+    #             port:
+    #               number: 8065
+    # - host: prometheus.{{ .Values.baseDomain }}
+    #   http:
+    #     paths:
+    #       - path: /
+    #         pathType: Prefix
+    #         backend:
+    #           service:
+    #             name: {{ template "fullname" . }}
+    #             port:
+    #               number: 9090
