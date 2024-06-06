@@ -147,3 +147,27 @@
 * Создан отдельный диск в YC, добавлены манифести для PersistentVolume и PersistentVolumeClaim с использованием нового диска в YC
 * В деплоймент mongodb добавлен persistentVolumeClaim
   ![Снимок экрана от 2024-05-04 14-15-10](https://github.com/Otus-DevOps-2023-11/blackboks_infra/assets/28865449/09291f36-5239-4823-9667-08c54eebd292)
+
+
+## ДЗ 22 - CI/CD в Kubernetes
+
+### Было сделано:
+
+* В terraform создан модуль для добавления maneged kubernetes кластера в YC(2 воркера, 1 мастер), поднят кластер
+* Установлен Helm версии 3.15
+* Созданы helm чарты для компонентов приложения, шаблонизированы манифесты, определены значения values
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/510f782b-225e-4f47-902e-95d9f77391a1)
+* Созданы  _helpers.tpl файлы для всех компонентов приложения
+* Добавлен отдельный чарт reddit для управления зависимостями
+* Установлен ingress-controller
+* В кластер установлен чарт gitlab-omnibus
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/07b300b4-d9f7-4b2e-96f9-a5852a815948)
+* Добавлены группа, проекты, переменные
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/c9bdfece-939a-4781-8285-af164a92e58c)
+* Настроен первоначальный вариант .gitlab-ci.yml
+* В репозиторий ui добавлена ветка feature3, так же добавлены дополнительные стейджи в .gitlab-ci.yml
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/325f4ef0-357e-4e35-9749-97030335f410)
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/3f04dad0-e557-4a36-ae93-1508249b1046)
+* Файл .gitlab-ci.yml распространен по другим репозиториям компонентов приложения, для репозитория reddit-deploy создан отдельный файл для деплоя на staging и production
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/964824a2-3c83-42f6-bb70-93019030d0e1)
+  ![Снимок экрана](https://github.com/Otus-DevOps-2023-11/blackboks_microservices/assets/28865449/bf1b7a27-e426-49fd-be56-4ab87db63624)
